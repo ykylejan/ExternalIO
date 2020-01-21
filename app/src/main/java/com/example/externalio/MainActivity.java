@@ -13,12 +13,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.File;
 
 
 
 public class MainActivity extends AppCompatActivity {
 
     static final int READ_BLOCK_SIZE = 100;
+
+    private String filename="dellatan.txt";
+    private String filepath="dellatan.externalio";
+    File myFile;
+    String myTyped;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
