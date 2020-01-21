@@ -9,11 +9,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.os.Environment;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.File;
+import java.io.IOException;
 
 
 
@@ -48,26 +52,23 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         try {
-                            FileInputStream fileIn = openFileInput("mytextfile.txt");
-                            InputStreamReader InputRead = new InputStreamReader(fileIn);
-
-                            char[] inputBuffer = new char[READ_BLOCK_SIZE];
-                            String s = "";
-                            int charRead;
-
-                            while ((charRead = InputRead.read(inputBuffer)) > 0) {
-                                // char to string conversion
-                                String readstring = String.copyValueOf(inputBuffer, 0, charRead);
-                                s += readstring;
+                            FileInputStream fis = new FileInputStream(myFile);
+                            DataInputStream in = new DataInputStream(fis);
+                            BufferedReader br =
+                                    new BufferedReader(new InputStreamReader(in));
+                            String strLine;
+                            while ((strLine = br.readLine()) != null) {
+                                myTyped = myTyped + strLine;
                             }
-                            InputRead.close();
-                            txtbox.setText(s);
-
-
-                        } catch (Exception e) {
+                            in.close();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        Toast.makeText(getBaseContext(), "File saved externally!",
+                                Toast.LENGTH_SHORT).show();
+
                     }
                 }
         );
@@ -76,18 +77,16 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         try {
-                            FileOutputStream fileout = openFileOutput("mytextfile.txt", MODE_PRIVATE);
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-                            outputWriter.write(txtbox.getText().toString());
-                            outputWriter.close();
-
-                            //display file saved message
-                            Toast.makeText(getBaseContext(), "File saved successfully!",
-                                    Toast.LENGTH_SHORT).show();
-
-                        } catch (Exception e) {
+                            FileOutputStream fos = new FileOutputStream(myFile);
+                            fos.write(txtbox.getText().toString().getBytes());
+                            fos.close();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        Toast.makeText(getBaseContext(), "File saved externally!",
+                                Toast.LENGTH_SHORT).show();
+
+
                     }
                 }
         );
